@@ -38,7 +38,7 @@ namespace APIECommerce.Controllers
             }
             else
             {
-                return BadRequest("Tipo de produto inválido");
+                return BadRequest("Invalid product type");
             }
 
             var Products = _products.Select(p => new
@@ -60,7 +60,7 @@ namespace APIECommerce.Controllers
 
             if (product is null)
             {
-                return NotFound($"Produto com id={id} não encontrado");
+                return NotFound($"Product with id={id} not found");
             }
 
             var productDetail = new
