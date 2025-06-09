@@ -1,5 +1,6 @@
 
 using APIECommerce.Context;
+using APIECommerce.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIECommerce
@@ -19,6 +20,8 @@ namespace APIECommerce
 
             var connection = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlServer(connection));
+
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 
             var app = builder.Build();
