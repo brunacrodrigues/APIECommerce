@@ -1,4 +1,7 @@
 
+using APIECommerce.Context;
+using Microsoft.EntityFrameworkCore;
+
 namespace APIECommerce
 {
     public class Program
@@ -14,6 +17,10 @@ namespace APIECommerce
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+            builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlServer(connection));
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -22,6 +29,9 @@ namespace APIECommerce
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            //For use static image files on wwwroot
+            app.UseStaticFiles();
 
             app.UseHttpsRedirection();
 
