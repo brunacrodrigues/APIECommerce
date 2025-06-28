@@ -73,10 +73,10 @@ namespace APIECommerce.Controllers
 
             return new ObjectResult(new
             {
-                access_token = jwt,
-                token_type = "bearer",
-                user_id = currentUser.Id,
-                user_name = currentUser.Name
+                accesstoken = jwt,
+                tokentype = "bearer",
+                userid = currentUser.Id,
+                username = currentUser.Name
             });
         }
 
@@ -140,5 +140,30 @@ namespace APIECommerce.Controllers
 
             return Ok(userImage);
         }
+
+
+        [Authorize]
+        [HttpGet("[action]")]
+        public async Task<IActionResult> UserProfileImage()
+        {
+            // verifica se o usuário está autenticado
+            var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+
+            if (user is null)
+                return NotFound("User not found");
+
+            var userImage = await _dbContext.Users
+                .Where(x => x.Email == userEmail)
+                .Select(x => new
+                {
+                    x.UrlImage,
+                })
+                .SingleOrDefaultAsync();
+
+            return Ok(userImage);
+        }
+
     }
 }
