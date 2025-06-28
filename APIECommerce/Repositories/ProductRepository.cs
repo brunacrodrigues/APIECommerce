@@ -18,19 +18,24 @@ namespace APIECommerce.Repositories
 
         public async Task<IEnumerable<Product>> GetBestSellerProductsAsync()
         {
-            return await _dbContext.Products.Where(p => p.BestSeller).ToListAsync();
+            return await _dbContext.Products.AsNoTracking().
+                Where(p => p.BestSeller).
+                ToListAsync();
         }
 
 
         public async Task<IEnumerable<Product>> GetPopularProductsAsync()
         {
-            return await _dbContext.Products.Where(p => p.Popular).ToListAsync();
+            return await _dbContext.Products.AsNoTracking().
+                Where(p => p.Popular).                
+                ToListAsync();
         }
 
 
         public async Task<Product> GetProductDetailsAsync(int id)
         {
-            var productDetail = await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
+            var productDetail = await _dbContext.Products.AsNoTracking().
+                FirstOrDefaultAsync(p => p.Id == id);
 
             return productDetail!;
         }
@@ -38,7 +43,9 @@ namespace APIECommerce.Repositories
 
         public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId)
         {
-            return await _dbContext.Products.Where(p => p.CategoryId == categoryId).ToListAsync();
+            return await _dbContext.Products.AsNoTracking().
+                Where(p => p.CategoryId == categoryId).
+                ToListAsync();
         }
     }
 }

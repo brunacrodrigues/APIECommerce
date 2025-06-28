@@ -78,6 +78,7 @@ namespace APIECommerce.Controllers
         {
 
             var orders = await _dbContext.Orders
+                .AsNoTracking()
                 .Where(o => o.UserId == userId)
                 .OrderByDescending(o => o.OrderDate)
                 .Select(o => new
@@ -88,7 +89,7 @@ namespace APIECommerce.Controllers
                 })
                 .ToListAsync();
 
-            if (orders == null || orders.Count == 0)
+            if (!orders.Any())
             {
                 return NotFound("No orders were found for the specified user.");
             }
@@ -105,10 +106,9 @@ namespace APIECommerce.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOrderDetails(int orderId)
         {
-            var orderDetails = await _dbContext.OrderDetails
+
+            var orderDetails = await _dbContext.OrderDetails.AsNoTracking()
                 .Where(od => od.OrderId == orderId)
-                .Include(od => od.Order)
-                .Include(od => od.Product)
                 .Select(od => new
                 {
                     Id = od.Id,
@@ -120,7 +120,7 @@ namespace APIECommerce.Controllers
                 })
                 .ToListAsync();
 
-            if (orderDetails == null || orderDetails.Count == 0)
+            if (!orderDetails.Any())
             {
                 return NotFound("Order details not found.");
             }
